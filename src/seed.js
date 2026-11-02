@@ -4,6 +4,15 @@ const { getDb } = require('./db');
 
 const U = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1200&q=80`;
 
+// Extra gallery angles per category so the details carousel has several slides
+const EXTRA = {
+  'Photo Studio': [U('photo-1492691527719-9d1e07e534b4'), U('photo-1527011046414-4781f1f94f8c')],
+  'Film Stage': [U('photo-1536440136628-849c177e76a1'), U('photo-1492691527719-9d1e07e534b4')],
+  'Podcast Lounge': [U('photo-1590602847861-f357a9332bbc'), U('photo-1478737270239-2f02b77fc618')],
+  'Music Suite': [U('photo-1519892300165-cb5542fb47c7'), U('photo-1493225457124-a3eb161ffa5f')],
+  Workshop: [U('photo-1513364776144-60967b0f800f'), U('photo-1460661419201-fd4cecdf8a8b')],
+};
+
 const HOST = { ownerEmail: 'host@studiospace.demo', ownerName: 'Maya Fontaine', ownerPhoto: '' };
 
 const reviewers = [
@@ -190,7 +199,7 @@ async function run() {
     return {
       ...HOST,
       ...s,
-      gallery: [s.image],
+      gallery: [...new Set([s.image, ...(EXTRA[s.category] || [])])],
       reviews,
       reviewCount: reviews.length,
       createdAt: new Date(now - i * 3600000 * 9),
