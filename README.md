@@ -3,7 +3,7 @@
 REST API for StudioSpace, a peer-to-peer creative studio booking platform. Built with Node.js, Express and MongoDB.
 
 **Client Repo:** https://github.com/kazolroy/studiospace-client
-**Live API:** https://YOUR-API.vercel.app
+**Live API:** https://studiospace-server-three.vercel.app
 
 ## Features
 
