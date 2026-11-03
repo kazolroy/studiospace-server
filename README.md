@@ -1,33 +1,62 @@
-# StudioSpace API
+# StudioSpace Server
 
-Express + MongoDB REST API for **StudioSpace**, the peer-to-peer creative workspace marketplace.
+REST API for StudioSpace, a peer-to-peer creative studio booking platform. Built with Node.js, Express and MongoDB.
 
-## Endpoints
+**Client Repo:** https://github.com/kazolroy/studiospace-client
+**Live API:** https://YOUR-API.vercel.app
+
+## Features
+
+- Studio CRUD with search, category and price filters, and sorting
+- Booking system with overlap check, so the same hour cannot be booked twice
+- Booking status flow: Pending, Confirmed, Completed, Cancelled
+- Reviews with automatic rating calculation
+- Firebase token verification for protected routes
+- Owner-only update and delete
+
+## API Endpoints
 
 | Method | Route | Auth | Description |
 | --- | --- | --- | --- |
-| GET | `/api/studios` | – | List studios (`q`, `category`, `sort`, `minPrice`, `maxPrice`, `limit`) |
-| GET | `/api/studios/:id` | – | Studio details |
-| GET | `/api/studios/:id/availability?date=` | – | Reserved hours for a date |
-| GET | `/api/studios/mine` | ✔ | Listings owned by me |
-| POST | `/api/studios` | ✔ | Create listing |
-| PUT | `/api/studios/:id` | ✔ owner | Update listing |
-| DELETE | `/api/studios/:id` | ✔ owner | Delete listing |
-| POST | `/api/studios/:id/reviews` | ✔ | Add / replace my review |
-| POST | `/api/bookings` | ✔ | Create a `Pending` booking (clash-checked) |
-| GET | `/api/bookings/mine` | ✔ | My reservations |
-| GET | `/api/bookings/requests` | ✔ | Reservations on studios I host |
-| PATCH | `/api/bookings/:id/status` | ✔ | Cancel / confirm / complete |
+| GET | `/api/studios` | No | List studios (search, filter, sort, limit) |
+| GET | `/api/studios/:id` | No | Studio details |
+| GET | `/api/studios/:id/availability` | No | Booked hours for a date |
+| GET | `/api/studios/mine` | Yes | My studios |
+| POST | `/api/studios` | Yes | Add studio |
+| PUT | `/api/studios/:id` | Yes | Update studio (owner) |
+| DELETE | `/api/studios/:id` | Yes | Delete studio (owner) |
+| POST | `/api/studios/:id/reviews` | Yes | Add review |
+| POST | `/api/bookings` | Yes | Create booking |
+| GET | `/api/bookings/mine` | Yes | My bookings |
+| GET | `/api/bookings/requests` | Yes | Requests on my studios |
+| PATCH | `/api/bookings/:id/status` | Yes | Update booking status |
 
-Protected routes expect a Firebase ID token: `Authorization: Bearer <token>`. Tokens are verified against Google's public keys with `jose`, so only the Firebase **project id** is needed.
+## Tech Stack
 
-## Local setup
+Node.js, Express, MongoDB, jose, dotenv, cors
 
-```bash
-npm install
-cp .env.example .env   # fill in MONGODB_URI and FIREBASE_PROJECT_ID
-npm run seed           # optional demo data
-npm run dev
-```
+## Local Setup
 
-Deploy to Vercel: import this folder, add the same environment variables, deploy.
+1. Clone and install
+   ```bash
+   git clone https://github.com/kazolroy/studiospace-server.git
+   cd studiospace-server
+   npm install
+   ```
+2. Copy `.env.example` to `.env` and fill in
+   ```
+   PORT=5000
+   MONGODB_URI=your-mongodb-connection-string
+   DB_NAME=studiospace
+   FIREBASE_PROJECT_ID=your-firebase-project-id
+   CLIENT_URLS=http://localhost:5173
+   ```
+3. Add demo data (optional)
+   ```bash
+   npm run seed
+   ```
+4. Start the server
+   ```bash
+   npm run dev
+   ```
+5. API runs at http://localhost:5000
