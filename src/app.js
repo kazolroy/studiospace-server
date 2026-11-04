@@ -8,7 +8,13 @@ const bookings = require('./routes/bookings');
 const app = express();
 
 const origins = (process.env.CLIENT_URLS || 'http://localhost:5173').split(',').map((s) => s.trim());
-app.use(cors({ origin: origins, methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
+const vercelClient = /^https:\/\/studiospace-client[a-z0-9-]*\.vercel\.app$/;
+app.use(
+  cors({
+    origin: (origin, cb) => cb(null, !origin || origins.includes(origin) || vercelClient.test(origin)),
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  })
+);
 app.use(express.json({ limit: '1mb' }));
 
 app.get('/', (req, res) => res.json({ name: 'StudioSpace API', status: 'ok' }));
